@@ -2,79 +2,55 @@
 # coding: utf-8
 
 import os
-import argparse
 
 from time import time
 
 import pandas as pd
+from prefect import flow, task
 from sqlalchemy import create_engine
 
 
-def main(params):
-    user = params.user
-    password = params.password
-    host = params.host
-    port = params.port
-    db = params.db
-    table_name = params.table_name
-    url = params.url
+@task(log_prints=True, retries=3, name='get data')
+def get_data(url: str) -> pd.DataFrame:
+    """Get csv data and transform to pd.DataFrame"""
+    print("Reading a csv file")
+    df = pd.read_csv(url)
+    print(f"{len(df)} rows were loaded into a dataframe")
+    return df
 
-    # the backup files are gzipped, and it's important to keep the correct extension
-    # for pandas to be able to open the file
-    if url.endswith('.csv.gz'):
-        csv_name = 'output.csv.gz'
-    else:
-        csv_name = 'output.csv'
 
-    os.system(f"wget {url} -O {csv_name}")
-
-    engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{db}')
-
-    df_iter = pd.read_csv(csv_name, iterator=True, chunksize=100000)
-
-    df = next(df_iter)
-    print(df.columns)
+@task(log_prints=True, name='transform data')
+def transform_data(df: pd.DataFrame) -> pd.DataFrame:
+    """Cleans and prepare a datframe"""
+    # remove line with missing VendorId
+    print('transforming a df')
+    print(f'Cleaning missing vendor rows, amount of affected rows: {df[df["VendorID"].isnull()]}')
+    df = df[~df["VendorID"].isnull()]
+    print(f'Cleaning invalid passenger count, amount of affected rows: {df[df["passenger_count"] <= 0]}')
+    # remove lines with invalid passenger count
+    df = df[df["passenger_count"] > 0]
+    print('Converting columns to datetime dtype')
     if 'lpep_pickup_datetime' in df.columns:
-        df.tpep_pickup_datetime = pd.to_datetime(df.lpep_pickup_datetime)
-        df.tpep_dropoff_datetime = pd.to_datetime(df.lpep_dropoff_datetime)
+        df.lpep_pickup_datetime = pd.to_datetime(df.lpep_pickup_datetime)
+        df.lpep_dropoff_datetime = pd.to_datetime(df.lpep_dropoff_datetime)
+    return df
 
-    df.head(n=0).to_sql(name=table_name, con=engine, if_exists='replace')
 
+@task(log_prints=True, name='ingest date to sql')
+def load(df, table_name: str, db: str)-> None:
+    print('creating connection to postgres')
+    engine = create_engine(f'postgresql://root:root@localhost:5432/{db}')
+    print('ingesting data ...')
     df.to_sql(name=table_name, con=engine, if_exists='append')
+    print('ingestion is complete')
 
-    while True:
 
-        try:
-            t_start = time()
-
-            df = next(df_iter)
-
-            if 'lpep_pickup_datetime' in df.columns:
-                df.tpep_pickup_datetime = pd.to_datetime(df.lpep_pickup_datetime)
-                df.tpep_dropoff_datetime = pd.to_datetime(df.lpep_dropoff_datetime)
-
-            df.to_sql(name=table_name, con=engine, if_exists='append')
-
-            t_end = time()
-
-            print('inserted another chunk, took %.3f second' % (t_end - t_start))
-
-        except StopIteration:
-            print("Finished ingesting data into the postgres database")
-            break
+@flow(log_prints=True, name='ingest flow')
+def ingest_data(url: str, db: str = 'ny_taxi', table_name: str = 'yellow_taxi_trips') -> None:
+    df = get_data(url)
+    df = transform_data(df)
+    load(df, table_name, db)
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Ingest CSV data to Postgres')
-
-    parser.add_argument('--user', required=True, help='user name for postgres')
-    parser.add_argument('--password', required=True, help='password for postgres')
-    parser.add_argument('--host', required=True, help='host for postgres')
-    parser.add_argument('--port', required=True, help='port for postgres')
-    parser.add_argument('--db', required=True, help='database name for postgres')
-    parser.add_argument('--table_name', required=True, help='name of the table where we will write the results to')
-    parser.add_argument('--url', required=True, help='url of the csv file')
-
-    args = parser.parse_args()
-
-    main(args)
+    ingest_data('https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz')

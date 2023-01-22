@@ -12,12 +12,12 @@ gcloud auth application-default login
 terraform init
 
 # Check changes to new infra plan
-terraform plan -var="project=<your-gcp-project-id>"
+terraform plan -var="project=zoomcamp-olvol3"
 ```
 
 ```shell
 # Create new infra
-terraform apply -var="project=<your-gcp-project-id>"
+terraform apply -var="project=zoomcamp-olvol3"
 ```
 
 ```shell
