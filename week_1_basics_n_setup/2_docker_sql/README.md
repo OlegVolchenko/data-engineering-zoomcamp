@@ -167,7 +167,7 @@ Running locally
 ```bash
 URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz"
 
-python ingest_data.py \
+python csv_to_postgres.py \
   --user=root \
   --password=root \
   --host=localhost \
