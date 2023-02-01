@@ -1,0 +1,60 @@
+###
+### A complete description of a Prefect Deployment for flow 'Ingest data to bg'
+###
+name: gcs_to_bq
+description: Main etl flow to load data into bq
+version: 1c5cb482074c8794a1de4b0cadee3265
+# The work queue that will handle this deployment's runs
+work_queue_name: default
+work_pool_name: null
+work_pool_queue_name: null
+tags: []
+parameters: {}
+schedule: null
+infra_overrides: {}
+
+###
+### DO NOT EDIT BELOW THIS LINE
+###
+flow_name: Ingest data to bg
+manifest_path: null
+infrastructure:
+  type: process
+  env: {}
+  labels: {}
+  name: null
+  command: null
+  stream_output: true
+  working_dir: null
+  _block_document_id: 4c4fbd2e-5b23-4d89-9266-df8d89543307
+  _block_document_name: anonymous-35007d3b-5f9d-49ac-aa27-20c123f48ea9
+  _is_anonymous: true
+  block_type_slug: process
+  _block_type_slug: process
+storage: null
+path: /Users/oleg.volchenko/Documents/GitHub/dezoomcamp/week_2_workflow_orchestration
+entrypoint: etl_gcs_to_bq.py:etl_gcs_to_bq
+parameter_openapi_schema:
+  title: Parameters
+  type: object
+  properties:
+    months:
+      title: months
+      position: 0
+      type: array
+      items:
+        type: integer
+    year:
+      title: year
+      position: 1
+      type: integer
+    color:
+      title: color
+      position: 2
+      type: string
+  required:
+  - months
+  - year
+  - color
+  definitions: null
+timestamp: '2023-02-01T22:02:31.054411+00:00'

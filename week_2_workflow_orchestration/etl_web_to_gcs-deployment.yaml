@@ -1,0 +1,57 @@
+###
+### A complete description of a Prefect Deployment for flow 'Flat file to gcs'
+###
+name: web_to_gcs
+description: null
+version: c12e772f32a1242cff04e1e0446ff7f4
+# The work queue that will handle this deployment's runs
+work_queue_name: default
+work_pool_name: null
+work_pool_queue_name: null
+tags: []
+parameters: {}
+schedule: null
+infra_overrides: {}
+infrastructure:
+  type: process
+  env: {}
+  labels: {}
+  name: null
+  command: null
+  stream_output: true
+  working_dir: null
+  block_type_slug: process
+  _block_type_slug: process
+
+###
+### DO NOT EDIT BELOW THIS LINE
+###
+flow_name: Flat file to gcs
+manifest_path: null
+storage: null
+path: /Users/oleg.volchenko/Documents/GitHub/dezoomcamp/week_2_workflow_orchestration
+entrypoint: etl_web_to_gcs.py:etl_web_to_gcs
+parameter_openapi_schema:
+  title: Parameters
+  type: object
+  properties:
+    months:
+      title: months
+      position: 0
+      type: array
+      items:
+        type: integer
+    year:
+      title: year
+      position: 1
+      type: integer
+    color:
+      title: color
+      position: 2
+      type: string
+  required:
+  - months
+  - year
+  - color
+  definitions: null
+timestamp: '2023-02-01T21:27:21.211772+00:00'
