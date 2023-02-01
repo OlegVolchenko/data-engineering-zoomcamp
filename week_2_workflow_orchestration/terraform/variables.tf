@@ -1,5 +1,4 @@
 locals {
-  data_lake_bucket = "dtc_data_lake"
   prefect_bucket = "prefect_taxi"
 }
 
@@ -19,14 +18,14 @@ variable "storage_class" {
   default = "STANDARD"
 }
 
-variable "DWH_BQ_DATASET" {
+variable "PREFECT_BQ_DATASET_GREEN" {
   description = "BigQuery Dataset that raw data (from GCS) will be written to"
   type = string
-  default = "trips_data_all"
+  default = "prefect_taxi_data_green"
 }
 
-variable "PREFECT_BQ_DATASET" {
+variable "PREFECT_BQ_DATASET_YELLOW" {
   description = "BigQuery Dataset that raw data (from GCS) will be written to"
   type = string
-  default = "prefect_taxi_data"
+  default = "prefect_taxi_data_yellow"
 }
