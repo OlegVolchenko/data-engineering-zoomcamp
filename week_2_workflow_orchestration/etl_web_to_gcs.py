@@ -30,16 +30,18 @@ def transform(df: pd.DataFrame, color: str) -> pd.DataFrame:
     print(
         f"Columns dtypes after casting: {datetime_prefix}_dropoff_datetime - "
         f"{df[f'{datetime_prefix}_dropoff_datetime'].dtype}")
+    print(print(f'processed {len(df)} rows of data'))
     return df
 
 
-@task(name='write result to local')
+@task(name='write result to local', log_prints=True)
 def write_local(df: pd.DataFrame, color: str, dataset_file) -> Path:
     """Writes DataFrame as parquet file"""
     if not os.path.isdir(f'data/{color}'):
         os.makedirs(f'data/{color}')
     path = Path(f'data/{color}/{dataset_file}.parquet')
     df.to_parquet(path, compression='gzip')
+    print(f'loaded {len(df)} rows into a parquet file')
     return path
 
 
