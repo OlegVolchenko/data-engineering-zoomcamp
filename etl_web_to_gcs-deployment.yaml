@@ -1,0 +1,66 @@
+###
+### A complete description of a Prefect Deployment for flow 'Flat file to gcs'
+###
+name: github-example-deployment
+description: null
+version: bf989e0d79dfd729eb56363c20604d8c
+# The work queue that will handle this deployment's runs
+work_queue_name: default
+work_pool_name: null
+work_pool_queue_name: null
+tags: []
+parameters: {}
+schedule: null
+infra_overrides: {}
+infrastructure:
+  type: process
+  env: {}
+  labels: {}
+  name: null
+  command: null
+  stream_output: true
+  working_dir: null
+  block_type_slug: process
+  _block_type_slug: process
+
+###
+### DO NOT EDIT BELOW THIS LINE
+###
+flow_name: Flat file to gcs
+manifest_path: null
+storage:
+  repository: https://github.com/OlegVolchenko/data-engineering-zoomcamp
+  reference: null
+  access_token: null
+  include_git_objects: false
+  _block_document_id: 615caa8c-70c2-4151-8a8c-7852b1a53698
+  _block_document_name: git
+  _is_anonymous: false
+  block_type_slug: github
+  _block_type_slug: github
+path: ''
+entrypoint: week_2_workflow_orchestration/etl_web_to_gcs.py:etl_web_to_gcs
+parameter_openapi_schema:
+  title: Parameters
+  type: object
+  properties:
+    months:
+      title: months
+      position: 0
+      type: array
+      items:
+        type: integer
+    year:
+      title: year
+      position: 1
+      type: integer
+    color:
+      title: color
+      position: 2
+      type: string
+  required:
+  - months
+  - year
+  - color
+  definitions: null
+timestamp: '2023-02-02T15:49:45.539105+00:00'
