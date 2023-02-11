@@ -5,6 +5,7 @@ from prefect import task, flow
 from prefect_gcp.cloud_storage import GcsBucket
 from typing import List
 import os
+from prefect.blocks.notifications import SlackWebhook
 
 
 @task(name='Get df', retries=3, log_prints=True)
@@ -50,6 +51,8 @@ def write_gcs(path: Path) -> None:
     """Upload parquet file to gcs"""
     gcp_cloud_storage_bucket_block = GcsBucket.load("bootcamp-bucket-connection")
     gcp_cloud_storage_bucket_block.upload_from_path(from_path=path, to_path=path)
+    slack_webhook_block = SlackWebhook.load("bootcamp-webhook")
+    slack_webhook_block.notify("Web to gcs ingestion workflow")
 
 
 @flow(name='Flat file to gcs', log_prints=True)
@@ -61,7 +64,6 @@ def etl_web_to_gcs(months: List[int], year: int, color: str) -> None:
         df = transform(df, color)
         path = write_local(df, color, dataset_file)
         write_gcs(path)
-
 
 if __name__ == '__main__':
     # Initialize parser
