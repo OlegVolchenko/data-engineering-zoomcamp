@@ -4,13 +4,13 @@ version: 2
 sources:
     - name: staging
       #For bigquery:
-      database: prefect_taxi_data
-      schema: prefect_taxi_data
+      database: zoomcamp-olvol3
+      schema: trips_data_all
 
       # loaded_at_field: record_loaded_at
       tables:
-        - name: trips_green
-        - name: trips_yellow
+        - name: green_tripdata
+        - name: yellow_tripdata
          # freshness:
            # error_after: {count: 6, period: hour}
 
