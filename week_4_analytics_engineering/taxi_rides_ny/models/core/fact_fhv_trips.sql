@@ -18,6 +18,6 @@ select
     trips.Affiliated_base_number
 from {{ ref('stg_fhv_tripdata') }} as trips
 inner join dim_zones as pickup_zone
-on trips_unioned.pickup_locationid = pickup_zone.locationid
+on trips.pickup_locationid = pickup_zone.locationid
 inner join dim_zones as dropoff_zone
-on trips_unioned.dropoff_locationid = dropoff_zone.locationid
+on trips.dropoff_locationid = dropoff_zone.locationid
