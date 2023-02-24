@@ -1,5 +1,10 @@
 {{ config(materialized='table') }}
 
+with dim_zones as (
+    select * from {{ ref('dim_zones') }}
+    where borough != 'Unknown'
+)
+
 select
     trips.index,
     trips.dispatching_base_num,
