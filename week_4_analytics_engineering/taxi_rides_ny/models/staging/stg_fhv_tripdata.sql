@@ -1,10 +1,10 @@
 {{ config(materialized='view') }}
 
 select
-    cast(index as integer) as index,
+    cast(index as INT64) as index,
     dispatching_base_num,
-    cast(pulocationid as integer) as  pickup_locationid,
-    cast(dolocationid as integer) as dropoff_locationid,
+    cast(pulocationid as INT64) as  pickup_locationid,
+    cast(dolocationid as INT64) as dropoff_locationid,
 
     -- timestamps
     cast(pickup_datetime as TIMESTAMP) as pickup_datetime,
