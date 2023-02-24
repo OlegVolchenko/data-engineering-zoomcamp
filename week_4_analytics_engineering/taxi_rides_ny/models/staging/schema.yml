@@ -5,6 +5,7 @@ sources:
     - name: staging
       #For bigquery:
       database: prefect_taxi_data
+      schema: prefect_taxi_data
 
       # loaded_at_field: record_loaded_at
       tables:
