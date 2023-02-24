@@ -3,8 +3,8 @@
 select
     cast(index as INT64) as index,
     dispatching_base_num,
-    cast(pulocationid as INT64) as  pickup_locationid,
-    cast(dolocationid as INT64) as dropoff_locationid,
+    cast(CAST(pulocationid AS FLOAT64) as INT64) as  pickup_locationid,
+    cast(CAST(dolocationid AS FLOAT64)as INT64) as dropoff_locationid,
 
     -- timestamps
     cast(pickup_datetime as TIMESTAMP) as pickup_datetime,
