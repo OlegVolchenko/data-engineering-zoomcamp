@@ -39,7 +39,7 @@ def load_to_bq(df: pd.DataFrame, color: str) -> None:
 
     gcp_cred_block = GcpCredentials.load('bootcamp-gcp-account')
     df.to_gbq(
-        destination_table=f'prefect_taxi_data.trips_{color}',
+        destination_table=f'trips_data_all.{color}_tripdata',
         project_id='zoomcamp-olvol3',
         credentials=gcp_cred_block.get_credentials_from_service_account(),
         chunksize=500000,
@@ -70,4 +70,4 @@ if __name__ == '__main__':
     # Read arguments from command line
     args = parser.parse_args()
 
-    etl_gcs_to_bq([2, 3], 2019, 'yellow')
+    etl_gcs_to_bq(args.Months, args.Year, args.Color)
