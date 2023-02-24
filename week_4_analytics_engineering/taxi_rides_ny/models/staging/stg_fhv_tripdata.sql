@@ -12,7 +12,7 @@ select
     SR_Flag,
     Affiliated_base_number
 
-from {{ source('staging','fhv_tripdata') }}
+from {{ source('staging','fhv_tripdata_table') }}
 
 
 -- dbt build --m <model.sql> --var 'is_test_run: false'
